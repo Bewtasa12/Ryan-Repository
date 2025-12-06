@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Exam Study Guide</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+            --warning-color: #ff9800;
+            --bg-light: #f5f7fa;
+            --text-dark: #333;
+            --text-light: #666;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-overall {
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            background: white;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .nav-list {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: var(--text-dark);
+            border-radius: 5px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-light);
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-progress {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            border: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .nav-progress.completed {
+            background: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .nav-progress.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+        }
+
+        /* Topic Section */
+        .topic-section {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .topic-header:hover {
+            opacity: 0.95;
+        }
+
+        .topic-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .topic-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .topic-section.expanded .topic-toggle {
+            transform: rotate(180deg);
+        }
+
+        .topic-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .topic-section.expanded .topic-content {
+            max-height: 10000px;
+        }
+
+        .topic-body {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Definitions */
+        .definitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .definition-card {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .definition-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .definition-term {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .definition-content {
+            display: none;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .definition-card.expanded .definition-content {
+            display: block;
+        }
+
+        /* Example Problems */
+        .problem {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .problem-question {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .problem-solution {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .problem-solution.show {
+            display: block;
+        }
+
+        .toggle-solution {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .toggle-solution:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Study Tips */
+        .tips-list {
+            list-style: none;
+        }
+
+        .tip-item {
+            background: var(--bg-light);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--warning-color);
+            border-radius: 5px;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.2s;
+        }
+
+        .image-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* PDF File Display */
+        .file-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            background: var(--bg-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .file-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .file-item.pdf {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8e8e8 100%);
+        }
+
+        .file-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-item.pdf .file-icon {
+            color: #d32f2f;
+        }
+
+        .file-item.image .file-icon {
+            display: none;
+        }
+
+        .file-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .file-item.has-thumbnail .file-icon {
+            display: none;
+        }
+
+        .file-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .file-type-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .upload-area input {
+            display: none;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.show {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* PDF Viewer */
+        .pdf-viewer {
+            width: 100%;
+            height: 90vh;
+            border: none;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .pdf-controls {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pdf-controls button {
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .pdf-controls button:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+        }
+
+        .pdf-page-info {
+            color: white;
+            font-size: 1rem;
+        }
+
+        .pdf-download-btn {
+            position: absolute;
+            top: -40px;
+            right: 50px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .pdf-download-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .quiz-question-text {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success-color);
+            background: #e8f5e9;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--error-color);
+            background: #ffebee;
+        }
+
+        .quiz-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .quiz-input.correct {
+            border-color: var(--success-color);
+            background: #e8f5e9;
+        }
+
+        .quiz-input.incorrect {
+            border-color: var(--error-color);
+            background: #ffebee;
+        }
+
+        .quiz-feedback {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .quiz-feedback.correct {
+            background: #e8f5e9;
+            color: var(--success-color);
+        }
+
+        .quiz-feedback.incorrect {
+            background: #ffebee;
+            color: var(--error-color);
+        }
+
+        .quiz-explanation {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-left: 3px solid var(--primary-color);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .quiz-results {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .quiz-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .quiz-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Progress Checkbox */
+        .progress-checkbox {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-radius: 5px;
+        }
+
+        .progress-checkbox input {
+            margin-right: 0.5rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .progress-checkbox label {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header {
+                position: static;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .topic-content {
+                max-height: none !important;
+            }
+
+            .topic-header {
+                cursor: default;
+            }
+
+            .toggle-solution,
+            .btn,
+            .upload-area,
+            .progress-checkbox {
+                display: none;
+            }
+
+            .problem-solution,
+            .definition-content {
+                display: block !important;
+            }
+
+            .quiz-options,
+            .quiz-input {
+                pointer-events: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .definitions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .image-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 Final Exam Study Guide</h1>
+        <div class="progress-overall">
+            <div class="progress-bar" id="overallProgress">0% Complete</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <nav class="sidebar">
+            <h2>Topics</h2>
+            <ul class="nav-list" id="navList"></ul>
+        </nav>
+
+        <main class="main-content" id="mainContent"></main>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <img id="lightboxImage" src="" alt="">
+        </div>
+    </div>
+
+    <div class="lightbox" id="pdfLightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="pdfLightboxClose">&times;</button>
+            <button class="pdf-download-btn" id="pdfDownloadBtn">Download PDF</button>
+            <iframe id="pdfViewer" class="pdf-viewer" src=""></iframe>
+            <div class="pdf-controls">
+                <button id="pdfPrevPage">← Previous</button>
+                <span class="pdf-page-info" id="pdfPageInfo">Page 1</span>
+                <button id="pdfNextPage">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Study Guide Data Structure
+        const studyData = {
+            topics: [
+                {
+                    id: 'topic-1',
+                    name: 'Number System Conversions',
+                    description: 'Converting decimal numbers to various bases (base 3, 5, 7, 9) using division-remainder method',
+                    color: '#667eea',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Base (Radix)',
+                            content: 'The number of unique digits used in a number system. For example, base 10 uses digits 0-9, base 2 uses 0-1.'
+                        },
+                        {
+                            term: 'Division-Remainder Method',
+                            content: 'A method to convert decimal to other bases by repeatedly dividing by the target base and collecting remainders in reverse order.'
+                        },
+                        {
+                            term: 'Positional Notation',
+                            content: 'A number system where the position of a digit determines its value, multiplied by the base raised to the power of its position.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Convert 458₁₀ to base 3.',
+                            solution: 'Using division-remainder method:\n458 ÷ 3 = 152 remainder 2\n152 ÷ 3 = 50 remainder 2\n50 ÷ 3 = 16 remainder 2\n16 ÷ 3 = 5 remainder 1\n5 ÷ 3 = 1 remainder 2\n1 ÷ 3 = 0 remainder 1\nReading remainders from bottom to top: 121222₃'
+                        },
+                        {
+                            question: 'Convert 677₁₀ to base 5.',
+                            solution: 'Using division-remainder method:\n677 ÷ 5 = 135 remainder 2\n135 ÷ 5 = 27 remainder 0\n27 ÷ 5 = 5 remainder 2\n5 ÷ 5 = 1 remainder 0\n1 ÷ 5 = 0 remainder 1\nReading remainders from bottom to top: 10202₅'
+                        },
+                        {
+                            question: 'Convert 1518₁₀ to base 7.',
+                            solution: 'Using division-remainder method:\n1518 ÷ 7 = 216 remainder 6\n216 ÷ 7 = 30 remainder 6\n30 ÷ 7 = 4 remainder 2\n4 ÷ 7 = 0 remainder 4\nReading remainders from bottom to top: 4266₇'
+                        },
+                        {
+                            question: 'Convert 4401₁₀ to base 9.',
+                            solution: 'Using division-remainder method:\n4401 ÷ 9 = 488 remainder 9 (but 9 in base 9 is written as 10, so remainder 0, carry 1)\nActually: 4401 ÷ 9 = 488 remainder 9 → remainder is 0, quotient becomes 489\n489 ÷ 9 = 54 remainder 3\n54 ÷ 9 = 6 remainder 0\n6 ÷ 9 = 0 remainder 6\nReading remainders: 6030₉'
+                        }
+                    ],
+                    tips: [
+                        'Always divide by the target base and collect remainders',
+                        'Read remainders from bottom to top (last remainder is most significant)',
+                        'Practice with different bases to build familiarity',
+                        'Check your answer by converting back to decimal'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'What is 588₁₀ in base 3?',
+                            options: ['210210₃', '121222₃', '102102₃', '201201₃'],
+                            correct: 0,
+                            explanation: 'Using division-remainder method: 588 ÷ 3 repeatedly gives 210210₃'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'The division-remainder method converts from decimal to other bases by repeatedly dividing by the ____.',
+                            answer: 'target base',
+                            explanation: 'You divide by the base you want to convert to, collecting remainders at each step.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-2',
+                    name: 'Binary Fractions',
+                    description: 'Converting decimal numbers with fractional parts to binary representation',
+                    color: '#764ba2',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Binary Point',
+                            content: 'The binary equivalent of a decimal point, separating integer and fractional parts in binary numbers.'
+                        },
+                        {
+                            term: 'Fractional Conversion',
+                            content: 'Converting decimal fractions to binary by repeatedly multiplying by 2 and collecting integer parts.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Convert 26.78125 to binary (up to 6 places).',
+                            solution: 'Integer part: 26₁₀ = 11010₂\nFractional part: 0.78125\n0.78125 × 2 = 1.5625 → 1\n0.5625 × 2 = 1.125 → 1\n0.125 × 2 = 0.25 → 0\n0.25 × 2 = 0.5 → 0\n0.5 × 2 = 1.0 → 1\nReading integer parts: 0.11001\nAnswer: 11010.11001₂'
+                        },
+                        {
+                            question: 'Convert 194.03125 to binary (up to 6 places).',
+                            solution: 'Integer part: 194₁₀ = 11000010₂\nFractional part: 0.03125\n0.03125 × 2 = 0.0625 → 0\n0.0625 × 2 = 0.125 → 0\n0.125 × 2 = 0.25 → 0\n0.25 × 2 = 0.5 → 0\n0.5 × 2 = 1.0 → 1\nReading integer parts: 0.00001\nAnswer: 11000010.00001₂'
+                        },
+                        {
+                            question: 'Convert 298.796875 to binary (up to 6 places).',
+                            solution: 'Integer part: 298₁₀ = 100101010₂\nFractional part: 0.796875\n0.796875 × 2 = 1.59375 → 1\n0.59375 × 2 = 1.1875 → 1\n0.1875 × 2 = 0.375 → 0\n0.375 × 2 = 0.75 → 0\n0.75 × 2 = 1.5 → 1\n0.5 × 2 = 1.0 → 1\nReading integer parts: 0.110011\nAnswer: 100101010.110011₂'
+                        }
+                    ],
+                    tips: [
+                        'For fractional part, multiply by 2 repeatedly',
+                        'Collect integer parts from top to bottom',
+                        'Stop when you reach 0.0 or reach desired precision',
+                        'Some fractions may not terminate in binary'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'What is 25.84375 in binary?',
+                            options: ['11001.11011₂', '11001.10101₂', '11010.11011₂', '11001.11100₂'],
+                            correct: 0,
+                            explanation: '25₁₀ = 11001₂, and 0.84375 = 0.11011₂, so answer is 11001.11011₂'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'To convert decimal fractions to binary, repeatedly multiply the fractional part by ____.',
+                            answer: '2',
+                            explanation: 'Multiplying by 2 and collecting integer parts converts decimal fractions to binary.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-3',
+                    name: 'Hexadecimal Conversions',
+                    description: 'Converting between hexadecimal and binary number systems',
+                    color: '#4caf50',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Hexadecimal',
+                            content: 'A base-16 number system using digits 0-9 and letters A-F (representing 10-15).'
+                        },
+                        {
+                            term: 'Hex to Binary',
+                            content: 'Each hexadecimal digit represents exactly 4 binary digits (bits).'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Convert AC12₁₆ to binary.',
+                            solution: 'A₁₆ = 1010₂\nC₁₆ = 1100₂\n1₁₆ = 0001₂\n2₁₆ = 0010₂\nCombining: 1010 1100 0001 0010₂\nAnswer: 1010110000010010₂'
+                        }
+                    ],
+                    tips: [
+                        'Each hex digit = 4 binary bits',
+                        'Memorize hex digits: 0-9, A(10), B(11), C(12), D(13), E(14), F(15)',
+                        'Group binary in sets of 4 when converting to hex',
+                        'Pad with leading zeros if needed'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'What is AC12₁₆ in binary?',
+                            options: ['1010110000010010₂', '1010110000100010₂', '1010110000010100₂', '1010110000010011₂'],
+                            correct: 0,
+                            explanation: 'A=1010, C=1100, 1=0001, 2=0010 → 1010110000010010₂'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'Each hexadecimal digit represents ____ binary bits.',
+                            answer: '4',
+                            explanation: 'Since 16 = 2⁴, each hex digit corresponds to exactly 4 binary bits.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-4',
+                    name: 'Signed Number Representations',
+                    description: 'Representing positive and negative numbers using signed magnitude, one\'s complement, and two\'s complement',
+                    color: '#ff9800',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Signed Magnitude',
+                            content: 'The leftmost bit represents the sign (0=positive, 1=negative), remaining bits represent magnitude.'
+                        },
+                        {
+                            term: 'One\'s Complement',
+                            content: 'Positive numbers same as signed magnitude. Negative numbers: flip all bits of positive representation.'
+                        },
+                        {
+                            term: 'Two\'s Complement',
+                            content: 'Positive numbers same as signed magnitude. Negative numbers: one\'s complement + 1. Most common representation.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Represent 77 in 8-bit signed magnitude, one\'s complement, and two\'s complement.',
+                            solution: '77₁₀ = 01001101₂\nSigned magnitude: 01001101 (MSB=0 for positive)\nOne\'s complement: 01001101 (same as positive)\nTwo\'s complement: 01001101 (same as positive)\nAll three are the same for positive numbers.'
+                        },
+                        {
+                            question: 'Represent -42 in 8-bit signed magnitude, one\'s complement, and two\'s complement.',
+                            solution: '42₁₀ = 00101010₂\nSigned magnitude: 10101010 (flip sign bit)\nOne\'s complement: 11010101 (flip all bits)\nTwo\'s complement: 11010110 (one\'s complement + 1)'
+                        },
+                        {
+                            question: 'Represent 119 in 8-bit signed magnitude, one\'s complement, and two\'s complement.',
+                            solution: '119₁₀ = 01110111₂\nSigned magnitude: 01110111\nOne\'s complement: 01110111\nTwo\'s complement: 01110111\nAll same for positive numbers.'
+                        },
+                        {
+                            question: 'Represent -107 in 8-bit signed magnitude, one\'s complement, and two\'s complement.',
+                            solution: '107₁₀ = 01101011₂\nSigned magnitude: 11101011 (flip sign bit)\nOne\'s complement: 10010100 (flip all bits)\nTwo\'s complement: 10010101 (one\'s complement + 1)'
+                        }
+                    ],
+                    tips: [
+                        'Positive numbers are the same in all three representations',
+                        'For negative numbers: signed magnitude flips sign bit, one\'s complement flips all bits, two\'s complement is one\'s complement + 1',
+                        'Two\'s complement is most commonly used in computers',
+                        'Two\'s complement has only one representation for zero'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'In 8-bit two\'s complement, what is -42?',
+                            options: ['11010110₂', '10101010₂', '11010101₂', '00101010₂'],
+                            correct: 0,
+                            explanation: '42 = 00101010₂, one\'s complement = 11010101₂, two\'s complement = 11010110₂'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'Two\'s complement representation is obtained by taking one\'s complement and adding ____.',
+                            answer: '1',
+                            explanation: 'Two\'s complement = one\'s complement + 1 for negative numbers.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-5',
+                    name: 'Boolean Algebra',
+                    description: 'Boolean identities, truth tables, DeMorgan\'s law, and expression simplification',
+                    color: '#f44336',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Boolean Algebra',
+                            content: 'A branch of algebra dealing with binary variables and logical operations (AND, OR, NOT).'
+                        },
+                        {
+                            term: 'DeMorgan\'s Law',
+                            content: '(AB)\' = A\' + B\' and (A+B)\' = A\'B\'. The complement of a product equals the sum of complements, and vice versa.'
+                        },
+                        {
+                            term: 'Truth Table',
+                            content: 'A table showing all possible input combinations and their corresponding output values for a Boolean function.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Construct a truth table for xyz + (xyz)\'',
+                            solution: 'Create table with x, y, z columns, compute xyz, then (xyz)\', then xyz + (xyz)\'.\nFor all combinations, xyz + (xyz)\' = 1 (always true by complement law).'
+                        },
+                        {
+                            question: 'Use DeMorgan\'s Law to find the complement of F(w,x,y,z) = xyz\'(y\'z + x)\' + (w\'yz + x\')',
+                            solution: 'F\' = [xyz\'(y\'z + x)\' + (w\'yz + x\')]\'\nApply DeMorgan: = [xyz\'(y\'z + x)\']\' · [(w\'yz + x\')]\'\n= [xyz\']\' + [(y\'z + x)\']\' · [(w\'yz)\']\' · [x\']\'\n= (x\' + y\' + z) + (y\'z + x) · (w + y\' + z\') · x'
+                        },
+                        {
+                            question: 'Simplify (ab + c + df)ef using Boolean identities',
+                            solution: 'Apply distributive law: (ab + c + df)ef = abef + cef + dfef\nApply idempotent: dfef = def\nResult: abef + cef + def'
+                        },
+                        {
+                            question: 'Simplify x + xy using Boolean identities',
+                            solution: 'Apply absorption law: x + xy = x(1 + y) = x · 1 = x\nOr: x + xy = x(1 + y) = x'
+                        },
+                        {
+                            question: 'Show that xy + x\'z + yz = xy + x\'z',
+                            solution: 'xy + x\'z + yz = xy + x\'z + yz(x + x\')\n= xy + x\'z + xyz + x\'yz\n= xy(1 + z) + x\'z(1 + y)\n= xy + x\'z'
+                        }
+                    ],
+                    tips: [
+                        'Memorize basic Boolean identities (Identity, Null, Idempotent, Inverse, etc.)',
+                        'DeMorgan\'s law: complement of product = sum of complements',
+                        'Use truth tables to verify simplifications',
+                        'Practice applying distributive, absorption, and other laws'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'According to DeMorgan\'s Law, (AB)\' equals:',
+                            options: ['A\' + B\'', 'A\'B\'', 'A + B', 'AB'],
+                            correct: 0,
+                            explanation: 'DeMorgan\'s Law states (AB)\' = A\' + B\', the complement of a product equals the sum of complements.'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'The absorption law states that x + xy = ____.',
+                            answer: 'x',
+                            explanation: 'x + xy = x(1 + y) = x · 1 = x by the absorption law.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-6',
+                    name: 'Binary Arithmetic',
+                    description: 'Booth\'s algorithm for multiplication and arithmetic shifting operations',
+                    color: '#9c27b0',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Booth\'s Algorithm',
+                            content: 'An algorithm for multiplying two signed binary numbers in two\'s complement representation, more efficient than standard multiplication.'
+                        },
+                        {
+                            term: 'Arithmetic Shift',
+                            content: 'Shifting bits left (multiply by 2) or right (divide by 2) while preserving the sign bit in signed representations.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Multiply 1011 × 0101 using Booth\'s algorithm (signed two\'s complement).',
+                            solution: 'Booth\'s algorithm uses recoding and shifting. For 1011 × 0101:\n- Recode multiplier 0101\n- Perform operations based on recoded bits\n- Result depends on specific Booth implementation'
+                        },
+                        {
+                            question: 'Double the binary value 00010101₂ using arithmetic shifting.',
+                            solution: 'To double, shift left by 1 position:\n00010101₂ << 1 = 00101010₂\nThis multiplies by 2.'
+                        },
+                        {
+                            question: 'Quadruple the binary value 01110111₂ using arithmetic shifting.',
+                            solution: 'To quadruple, shift left by 2 positions:\n01110111₂ << 2 = 111011100₂ (9 bits, but in 8-bit: 11011100₂)\nOr: shift left once (double), then shift left again.'
+                        },
+                        {
+                            question: 'Divide the binary value 11001010₂ in half using arithmetic shifting.',
+                            solution: 'To divide by 2, shift right by 1 position (arithmetic right shift preserves sign):\n11001010₂ >> 1 = 11100101₂\nSign bit is preserved in arithmetic right shift.'
+                        }
+                    ],
+                    tips: [
+                        'Left shift multiplies by 2^n (n = number of positions)',
+                        'Right shift divides by 2^n (n = number of positions)',
+                        'Arithmetic right shift preserves the sign bit',
+                        'Booth\'s algorithm is efficient for signed multiplication',
+                        'Practice with different bit patterns'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'To double a binary number, you shift it:',
+                            options: ['Left by 1', 'Right by 1', 'Left by 2', 'Right by 2'],
+                            correct: 0,
+                            explanation: 'Shifting left by 1 position multiplies by 2, effectively doubling the value.'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'Booth\'s algorithm is used for ____ signed binary numbers.',
+                            answer: 'multiplying',
+                            explanation: 'Booth\'s algorithm efficiently multiplies two signed binary numbers in two\'s complement form.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-7',
+                    name: 'IEEE-754 Floating Point',
+                    description: 'Representing floating-point numbers using IEEE-754 single and double precision standards',
+                    color: '#00bcd4',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'IEEE-754 Single Precision',
+                            content: '32-bit format: 1 sign bit, 8 exponent bits, 23 mantissa bits. Range: ~±3.4×10³⁸'
+                        },
+                        {
+                            term: 'IEEE-754 Double Precision',
+                            content: '64-bit format: 1 sign bit, 11 exponent bits, 52 mantissa bits. Range: ~±1.7×10³⁰⁸'
+                        },
+                        {
+                            term: 'Normalized Form',
+                            content: 'Floating point representation where the mantissa is between 1.0 and 2.0 (implicit leading 1).'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Represent -1.5 using IEEE-754 single precision. Show sign bit, exponent, and significand.',
+                            solution: '-1.5 = -1.1₂ = -1.1 × 2⁰\nSign: 1 (negative)\nExponent: 0 + 127 = 127₁₀ = 01111111₂\nMantissa: .10000000000000000000000 (implicit 1)\nFull: 1 01111111 10000000000000000000000'
+                        },
+                        {
+                            question: 'Represent 26.625 using IEEE-754 single precision. Show sign bit, exponent, and significand.',
+                            solution: '26.625₁₀ = 11010.101₂ = 1.1010101 × 2⁴\nSign: 0 (positive)\nExponent: 4 + 127 = 131₁₀ = 10000011₂\nMantissa: .10101010000000000000000\nFull: 0 10000011 10101010000000000000000'
+                        },
+                        {
+                            question: 'Represent 12.5 using IEEE-754 double precision. Show sign bit, exponent, and significand.',
+                            solution: '12.5₁₀ = 1100.1₂ = 1.1001 × 2³\nSign: 0 (positive)\nExponent: 3 + 1023 = 1026₁₀ = 10000000010₂\nMantissa: .1001000... (52 bits)'
+                        },
+                        {
+                            question: 'Represent 0.75 using IEEE-754 double precision. Show sign bit, exponent, and significand.',
+                            solution: '0.75₁₀ = 0.11₂ = 1.1 × 2⁻¹\nSign: 0 (positive)\nExponent: -1 + 1023 = 1022₁₀ = 01111111110₂\nMantissa: .1000... (52 bits)'
+                        }
+                    ],
+                    tips: [
+                        'Convert decimal to binary first',
+                        'Normalize to 1.xxxx × 2ⁿ form',
+                        'Exponent bias: 127 for single, 1023 for double',
+                        'Sign bit: 0 for positive, 1 for negative',
+                        'Mantissa stores fractional part (implicit leading 1)'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'IEEE-754 single precision uses how many bits for the exponent?',
+                            options: ['8', '11', '23', '32'],
+                            correct: 0,
+                            explanation: 'Single precision: 1 sign + 8 exponent + 23 mantissa = 32 bits total.'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'The exponent bias for IEEE-754 single precision is ____.',
+                            answer: '127',
+                            explanation: 'Single precision uses bias 127, so stored exponent = actual exponent + 127.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-8',
+                    name: 'Error Detection: Hamming Distance',
+                    description: 'Calculating Hamming distance for error detection in binary codes',
+                    color: '#795548',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Hamming Distance',
+                            content: 'The number of bit positions in which two binary codes differ. Used to measure error detection/correction capability.'
+                        },
+                        {
+                            term: 'Minimum Hamming Distance',
+                            content: 'The smallest Hamming distance between any two valid codewords. Determines error detection/correction ability.'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Compute the Hamming distance of the binary code 0011010010111100.',
+                            solution: 'To find Hamming distance, compare each bit position:\nFor a single code, Hamming distance typically refers to minimum distance between valid codewords.\nFor code 0011010010111100, if comparing with all-zero code:\n0011010010111100\n0000000000000000\nDiffer in positions: 3,4,6,9,11,12,13,14 = 8 bits different\nHamming distance = 8'
+                        }
+                    ],
+                    tips: [
+                        'Hamming distance = number of differing bit positions',
+                        'Compare bit-by-bit between two codes',
+                        'Minimum Hamming distance determines error detection capability',
+                        'Code with distance d can detect (d-1) errors'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'If two binary codes differ in 5 bit positions, their Hamming distance is:',
+                            options: ['5', '4', '6', '3'],
+                            correct: 0,
+                            explanation: 'Hamming distance is the number of bit positions where two codes differ.'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'A code with minimum Hamming distance d can detect up to ____ errors.',
+                            answer: 'd-1',
+                            explanation: 'A code with minimum Hamming distance d can detect (d-1) errors.'
+                        }
+                    ]
+                },
+                {
+                    id: 'topic-9',
+                    name: 'Digital Logic: Multiplexers & K-Maps',
+                    description: 'Implementing Boolean functions using multiplexers and Karnaugh maps for simplification',
+                    color: '#607d8b',
+                    studied: false,
+                    definitions: [
+                        {
+                            term: 'Multiplexer (MUX)',
+                            content: 'A combinational circuit that selects one of many inputs and forwards it to a single output based on select lines.'
+                        },
+                        {
+                            term: 'Karnaugh Map (K-map)',
+                            content: 'A graphical method for simplifying Boolean expressions by grouping adjacent minterms.'
+                        },
+                        {
+                            term: '4x1 MUX',
+                            content: 'A multiplexer with 4 data inputs (I0-I3), 2 select lines (S1, S0), and 1 output (Y).'
+                        }
+                    ],
+                    problems: [
+                        {
+                            question: 'Implement F(A,B,C,D) = Σ(1,2,5,7,12) using a 4x1 MUX with A and B as select lines.',
+                            solution: 'Using A and B as select lines (S1=A, S0=B):\nCreate K-map grouped by AB values:\nFor AB=00 (I0): minterms 1,2 → I0 = C\'D + CD\' = C⊕D\nFor AB=01 (I1): minterms 5,7 → I1 = D\nFor AB=10 (I2): no minterms → I2 = 0\nFor AB=11 (I3): minterm 12 → I3 = C\'D\'\nConnect I0=C⊕D, I1=D, I2=0, I3=C\'D\' to the MUX.'
+                        }
+                    ],
+                    tips: [
+                        'Use K-maps to find simplified expressions for each MUX input',
+                        'Select lines determine which input is routed to output',
+                        'Group minterms in K-map based on select line values',
+                        '4x1 MUX needs 2 select lines for 4 inputs',
+                        'Practice with different Boolean functions'
+                    ],
+                    images: [],
+                    quizzes: [
+                        {
+                            type: 'multiple',
+                            question: 'A 4x1 multiplexer requires how many select lines?',
+                            options: ['2', '3', '4', '1'],
+                            correct: 0,
+                            explanation: 'A 4x1 MUX needs 2 select lines since 2² = 4, allowing selection of one of 4 inputs.'
+                        },
+                        {
+                            type: 'fill',
+                            question: 'K-maps are used to ____ Boolean expressions.',
+                            answer: 'simplify',
+                            explanation: 'Karnaugh maps graphically simplify Boolean expressions by grouping adjacent minterms.'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Initialize the application
+        class StudyGuide {
+            constructor() {
+                this.loadProgress();
+                this.renderNavigation();
+                this.renderTopics();
+                this.updateOverallProgress();
+                this.attachEventListeners();
+            }
+
+            loadProgress() {
+                const saved = localStorage.getItem('studyProgress');
+                if (saved) {
+                    const progress = JSON.parse(saved);
+                    studyData.topics.forEach((topic, index) => {
+                        if (progress[topic.id] !== undefined) {
+                            topic.studied = progress[topic.id].studied || false;
+                            topic.quizScores = progress[topic.id].quizScores || {};
+                        }
+                    });
+                }
+            }
+
+            saveProgress() {
+                const progress = {};
+                studyData.topics.forEach(topic => {
+                    progress[topic.id] = {
+                        studied: topic.studied || false,
+                        quizScores: topic.quizScores || {}
+                    };
+                });
+                localStorage.setItem('studyProgress', JSON.stringify(progress));
+            }
+
+            renderNavigation() {
+                const navList = document.getElementById('navList');
+                navList.innerHTML = '';
+
+                studyData.topics.forEach((topic, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'nav-item';
+                    const progressClass = topic.studied ? 'completed' : '';
+                    li.innerHTML = `
+                        <a class="nav-link" href="#topic-${index}" data-topic="${index}">
+                            <span class="nav-progress ${progressClass}"></span>
+                            ${topic.name}
+                        </a>
+                    `;
+                    navList.appendChild(li);
+                });
+
+                // Add click handlers
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const topicIndex = parseInt(link.dataset.topic);
+                        this.scrollToTopic(topicIndex);
+                    });
+                });
+            }
+
+            renderTopics() {
+                const mainContent = document.getElementById('mainContent');
+                mainContent.innerHTML = '';
+
+                studyData.topics.forEach((topic, index) => {
+                    const section = this.createTopicSection(topic, index);
+                    mainContent.appendChild(section);
+                });
+            }
+
+            createTopicSection(topic, index) {
+                const section = document.createElement('div');
+                section.className = 'topic-section';
+                section.id = `topic-${index}`;
+
+                const color = topic.color || '#667eea';
+
+                section.innerHTML = `
+                    <div class="topic-header" style="background: linear-gradient(135deg, ${color} 0%, ${this.darkenColor(color)} 100%);">
+                        <h2>${topic.name}</h2>
+                        <span class="topic-toggle">▼</span>
+                    </div>
+                    <div class="topic-content">
+                        <div class="topic-body">
+                            ${topic.description ? `<p style="margin-bottom: 1.5rem; color: var(--text-light);">${topic.description}</p>` : ''}
+                            
+                            <div class="progress-checkbox">
+                                <input type="checkbox" id="studied-${index}" ${topic.studied ? 'checked' : ''}>
+                                <label for="studied-${index}">Mark as studied</label>
+                            </div>
+
+                            ${this.renderDefinitions(topic)}
+                            ${this.renderProblems(topic)}
+                            ${this.renderTips(topic)}
+                            ${this.renderImages(topic, index)}
+                            ${this.renderQuiz(topic, index)}
+                        </div>
+                    </div>
+                `;
+
+                // Attach event listeners
+                const header = section.querySelector('.topic-header');
+                header.addEventListener('click', () => {
+                    section.classList.toggle('expanded');
+                    this.updateActiveNav();
+                });
+
+                const checkbox = section.querySelector(`#studied-${index}`);
+                checkbox.addEventListener('change', () => {
+                    topic.studied = checkbox.checked;
+                    this.saveProgress();
+                    this.updateOverallProgress();
+                    this.renderNavigation();
+                });
+
+                // Expand if not collapsed in localStorage
+                const expanded = localStorage.getItem(`topic-${index}-expanded`);
+                if (expanded === 'true' || index === 0) {
+                    section.classList.add('expanded');
+                }
+
+                return section;
+            }
+
+            renderDefinitions(topic) {
+                if (!topic.definitions || topic.definitions.length === 0) return '';
+
+                let html = '<div class="section"><h3>📖 Key Definitions</h3><div class="definitions-grid">';
+                topic.definitions.forEach(def => {
+                    html += `
+                        <div class="definition-card">
+                            <div class="definition-term">${def.term}</div>
+                            <div class="definition-content">${def.content}</div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+
+                return html;
+            }
+
+            renderProblems(topic) {
+                if (!topic.problems || topic.problems.length === 0) return '';
+
+                let html = '<div class="section"><h3>📝 Example Problems</h3>';
+                topic.problems.forEach((problem, idx) => {
+                    html += `
+                        <div class="problem">
+                            <div class="problem-question">${problem.question}</div>
+                            <button class="toggle-solution" onclick="this.nextElementSibling.classList.toggle('show'); this.textContent = this.nextElementSibling.classList.contains('show') ? 'Hide Solution' : 'Show Solution';">Show Solution</button>
+                            <div class="problem-solution">${problem.solution}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+
+                return html;
+            }
+
+            renderTips(topic) {
+                if (!topic.tips || topic.tips.length === 0) return '';
+
+                let html = '<div class="section"><h3>💡 Study Tips</h3><ul class="tips-list">';
+                topic.tips.forEach(tip => {
+                    html += `<li class="tip-item">${tip}</li>`;
+                });
+                html += '</ul></div>';
+
+                return html;
+            }
+
+            renderImages(topic, topicIndex) {
+                let html = '<div class="section"><h3>📁 Lecture Notes & Files</h3>';
+                
+                const files = topic.files || topic.images || [];
+                if (files.length > 0) {
+                    html += '<div class="image-gallery">';
+                    files.forEach((file, idx) => {
+                        const fileType = file.type || (file.src.startsWith('data:application/pdf') ? 'pdf' : 'image');
+                        const fileName = file.caption || file.name || 'File';
+                        
+                        if (fileType === 'pdf') {
+                            html += `
+                                <div class="file-item pdf ${file.thumbnail ? 'has-thumbnail' : ''}" onclick="studyGuide.openPDFViewer('${file.src}', '${fileName.replace(/'/g, "\\'")}')">
+                                    ${file.thumbnail ? `<img src="${file.thumbnail}" class="file-thumbnail" alt="PDF thumbnail">` : ''}
+                                    <div class="file-icon">📄</div>
+                                    <div class="file-name">${fileName}</div>
+                                    <div class="file-type-badge">PDF</div>
+                                </div>
+                            `;
+                        } else {
+                            html += `
+                                <div class="file-item image has-thumbnail" onclick="studyGuide.openLightbox('${file.src}', '${fileName.replace(/'/g, "\\'")}')">
+                                    <img src="${file.src}" class="file-thumbnail" alt="${fileName}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22%23ddd%22 width=%22200%22 height=%22200%22/%3E%3Ctext fill=%22%23999%22 font-family=%22sans-serif%22 font-size=%2214%22 dy=%2210.5%22 font-weight=%22bold%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22%3EImage not found%3C/text%3E%3C/svg%3E'">
+                                    <div class="file-name">${fileName}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                    html += '</div>';
+                }
+
+                html += `
+                    <div class="upload-area" onclick="document.getElementById('upload-${topicIndex}').click()">
+                        <input type="file" id="upload-${topicIndex}" accept="image/*,.pdf" multiple onchange="studyGuide.handleFileUpload(${topicIndex}, this)">
+                        <p>📤 Click to upload images or PDF files</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">Supports: JPG, PNG, PDF</p>
+                    </div>
+                </div>`;
+
+                return html;
+            }
+
+            renderQuiz(topic, topicIndex) {
+                if (!topic.quizzes || topic.quizzes.length === 0) return '';
+
+                let html = '<div class="section"><h3>🎯 Quiz</h3><div class="quiz-container">';
+                
+                topic.quizzes.forEach((quiz, qIdx) => {
+                    const quizId = `quiz-${topicIndex}-${qIdx}`;
+                    html += `<div class="quiz-question" id="${quizId}">`;
+                    html += `<div class="quiz-question-text">${qIdx + 1}. ${quiz.question}</div>`;
+
+                    if (quiz.type === 'multiple') {
+                        html += '<div class="quiz-options">';
+                        quiz.options.forEach((option, oIdx) => {
+                            html += `
+                                <div class="quiz-option" onclick="studyGuide.selectAnswer(${topicIndex}, ${qIdx}, ${oIdx}, '${quiz.type}')">
+                                    <input type="radio" name="${quizId}" value="${oIdx}" id="${quizId}-${oIdx}">
+                                    <label for="${quizId}-${oIdx}" style="margin-left: 0.5rem; cursor: pointer; flex: 1;">${option}</label>
+                                </div>
+                            `;
+                        });
+                        html += '</div>';
+                    } else if (quiz.type === 'fill') {
+                        html += `
+                            <input type="text" class="quiz-input" id="${quizId}-input" placeholder="Enter your answer">
+                            <button class="btn btn-primary" onclick="studyGuide.checkFillAnswer(${topicIndex}, ${qIdx}, '${quiz.answer}')" style="margin-top: 0.5rem;">Check Answer</button>
+                        `;
+                    }
+
+                    html += `<div id="${quizId}-feedback"></div>`;
+                    html += '</div>';
+                });
+
+                html += `
+                    <div class="quiz-results" id="quiz-results-${topicIndex}" style="display: none;">
+                        <div class="quiz-score" id="quiz-score-${topicIndex}"></div>
+                        <div class="quiz-actions">
+                            <button class="btn btn-secondary" onclick="studyGuide.resetQuiz(${topicIndex})">Reset Quiz</button>
+                        </div>
+                    </div>
+                </div></div>`;
+
+                return html;
+            }
+
+            selectAnswer(topicIndex, quizIndex, optionIndex, type) {
+                const topic = studyData.topics[topicIndex];
+                const quiz = topic.quizzes[quizIndex];
+                const quizId = `quiz-${topicIndex}-${quizIndex}`;
+                const feedbackEl = document.getElementById(`${quizId}-feedback`);
+
+                // Remove previous selections
+                document.querySelectorAll(`#${quizId} .quiz-option`).forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+
+                // Mark selected
+                const selectedOption = document.querySelector(`#${quizId}-${optionIndex}`).closest('.quiz-option');
+                selectedOption.classList.add('selected');
+
+                // Check answer
+                const isCorrect = optionIndex === quiz.correct;
+                selectedOption.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                // Show feedback
+                let feedbackHtml = `<div class="quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}">`;
+                feedbackHtml += isCorrect ? '✓ Correct!' : '✗ Incorrect';
+                feedbackHtml += '</div>';
+                if (quiz.explanation) {
+                    feedbackHtml += `<div class="quiz-explanation">${quiz.explanation}</div>`;
+                }
+                feedbackEl.innerHTML = feedbackHtml;
+
+                // Update quiz scores
+                if (!topic.quizScores) topic.quizScores = {};
+                topic.quizScores[quizIndex] = isCorrect;
+                this.saveProgress();
+                this.updateQuizResults(topicIndex);
+            }
+
+            checkFillAnswer(topicIndex, quizIndex, correctAnswer) {
+                const topic = studyData.topics[topicIndex];
+                const quiz = topic.quizzes[quizIndex];
+                const quizId = `quiz-${topicIndex}-${quizIndex}`;
+                const inputEl = document.getElementById(`${quizId}-input`);
+                const feedbackEl = document.getElementById(`${quizId}-feedback`);
+                const userAnswer = inputEl.value.trim().toLowerCase();
+                const correct = correctAnswer.toLowerCase();
+
+                // Normalize answers (remove extra spaces, handle variations)
+                const normalizedUser = userAnswer.replace(/\s+/g, ' ');
+                const normalizedCorrect = correct.replace(/\s+/g, ' ');
+
+                const isCorrect = normalizedUser === normalizedCorrect || 
+                                 userAnswer === correct ||
+                                 this.answerMatches(userAnswer, correct);
+
+                inputEl.classList.remove('correct', 'incorrect');
+                inputEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+                let feedbackHtml = `<div class="quiz-feedback ${isCorrect ? 'correct' : 'incorrect'}">`;
+                feedbackHtml += isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer is: ${correctAnswer}`;
+                feedbackHtml += '</div>';
+                if (quiz.explanation) {
+                    feedbackHtml += `<div class="quiz-explanation">${quiz.explanation}</div>`;
+                }
+                feedbackEl.innerHTML = feedbackHtml;
+
+                // Update quiz scores
+                if (!topic.quizScores) topic.quizScores = {};
+                topic.quizScores[quizIndex] = isCorrect;
+                this.saveProgress();
+                this.updateQuizResults(topicIndex);
+            }
+
+            answerMatches(user, correct) {
+                // Simple matching for common variations
+                const variations = [
+                    user === correct,
+                    user.replace(/[^a-z0-9]/g, '') === correct.replace(/[^a-z0-9]/g, ''),
+                    user.includes(correct) || correct.includes(user)
+                ];
+                return variations.some(v => v);
+            }
+
+            updateQuizResults(topicIndex) {
+                const topic = studyData.topics[topicIndex];
+                if (!topic.quizScores) return;
+
+                const total = topic.quizzes.length;
+                const correct = Object.values(topic.quizScores).filter(s => s === true).length;
+                const percentage = Math.round((correct / total) * 100);
+
+                const resultsEl = document.getElementById(`quiz-results-${topicIndex}`);
+                const scoreEl = document.getElementById(`quiz-score-${topicIndex}`);
+                
+                if (Object.keys(topic.quizScores).length === total) {
+                    resultsEl.style.display = 'block';
+                    scoreEl.textContent = `Score: ${correct}/${total} (${percentage}%)`;
+                    scoreEl.style.color = percentage >= 70 ? 'var(--success-color)' : 
+                                         percentage >= 50 ? 'var(--warning-color)' : 
+                                         'var(--error-color)';
+                }
+            }
+
+            resetQuiz(topicIndex) {
+                const topic = studyData.topics[topicIndex];
+                topic.quizScores = {};
+                this.saveProgress();
+                
+                // Reset all quiz elements
+                const topicSection = document.getElementById(`topic-${topicIndex}`);
+                topicSection.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                topicSection.querySelectorAll('.quiz-input').forEach(input => {
+                    input.value = '';
+                    input.classList.remove('correct', 'incorrect');
+                });
+                topicSection.querySelectorAll('[id$="-feedback"]').forEach(fb => {
+                    fb.innerHTML = '';
+                });
+                document.getElementById(`quiz-results-${topicIndex}`).style.display = 'none';
+            }
+
+            handleFileUpload(topicIndex, input) {
+                const files = Array.from(input.files);
+                if (files.length === 0) return;
+
+                const topic = studyData.topics[topicIndex];
+                if (!topic.files) topic.files = [];
+                
+                let processedCount = 0;
+                
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const fileType = file.type;
+                        const isPDF = fileType === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                        
+                        if (isPDF) {
+                            // Handle PDF
+                            this.processPDF(e.target.result, file.name, topic, () => {
+                                processedCount++;
+                                if (processedCount === files.length) {
+                                    this.renderTopics();
+                                    this.attachEventListeners();
+                                }
+                            });
+                        } else {
+                            // Handle image
+                            topic.files.push({
+                                type: 'image',
+                                src: e.target.result,
+                                caption: file.name,
+                                name: file.name
+                            });
+                            
+                            processedCount++;
+                            if (processedCount === files.length) {
+                                this.renderTopics();
+                                this.attachEventListeners();
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            async processPDF(pdfDataUrl, fileName, topic, callback) {
+                try {
+                    // Set up PDF.js worker
+                    if (typeof pdfjsLib !== 'undefined') {
+                        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                        
+                        // Load PDF and get first page for thumbnail
+                        const loadingTask = pdfjsLib.getDocument({ data: pdfDataUrl });
+                        const pdf = await loadingTask.promise;
+                        const page = await pdf.getPage(1);
+                        
+                        // Render first page as thumbnail
+                        const viewport = page.getViewport({ scale: 0.5 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        
+                        await page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        }).promise;
+                        
+                        const thumbnail = canvas.toDataURL('image/png');
+                        
+                        topic.files.push({
+                            type: 'pdf',
+                            src: pdfDataUrl,
+                            caption: fileName,
+                            name: fileName,
+                            thumbnail: thumbnail,
+                            pageCount: pdf.numPages
+                        });
+                    } else {
+                        // Fallback if PDF.js not loaded - try again after short delay
+                        setTimeout(() => {
+                            if (typeof pdfjsLib !== 'undefined') {
+                                this.processPDF(pdfDataUrl, fileName, topic, callback);
+                            } else {
+                                // Add PDF without thumbnail if PDF.js fails to load
+                                topic.files.push({
+                                    type: 'pdf',
+                                    src: pdfDataUrl,
+                                    caption: fileName,
+                                    name: fileName
+                                });
+                                callback();
+                            }
+                        }, 500);
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Error processing PDF:', error);
+                    // Add PDF without thumbnail if processing fails
+                    topic.files.push({
+                        type: 'pdf',
+                        src: pdfDataUrl,
+                        caption: fileName,
+                        name: fileName
+                    });
+                }
+                
+                callback();
+            }
+
+            openLightbox(src, caption) {
+                const lightbox = document.getElementById('lightbox');
+                const img = document.getElementById('lightboxImage');
+                img.src = src;
+                img.alt = caption;
+                lightbox.classList.add('show');
+            }
+
+            closeLightbox() {
+                document.getElementById('lightbox').classList.remove('show');
+            }
+
+            openPDFViewer(pdfSrc, fileName) {
+                const lightbox = document.getElementById('pdfLightbox');
+                const viewer = document.getElementById('pdfViewer');
+                const downloadBtn = document.getElementById('pdfDownloadBtn');
+                
+                // Set PDF source
+                viewer.src = pdfSrc + '#toolbar=1';
+                downloadBtn.onclick = () => {
+                    const link = document.createElement('a');
+                    link.href = pdfSrc;
+                    link.download = fileName;
+                    link.click();
+                };
+                
+                lightbox.classList.add('show');
+                
+                // Simple page navigation (basic implementation)
+                // For full PDF.js integration, would need more complex setup
+                viewer.onload = () => {
+                    // PDF.js navigation could be added here if needed
+                };
+            }
+
+            closePDFViewer() {
+                document.getElementById('pdfLightbox').classList.remove('show');
+                document.getElementById('pdfViewer').src = '';
+            }
+
+            updateOverallProgress() {
+                const total = studyData.topics.length;
+                const studied = studyData.topics.filter(t => t.studied).length;
+                const percentage = total > 0 ? Math.round((studied / total) * 100) : 0;
+                
+                const progressBar = document.getElementById('overallProgress');
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${percentage}% Complete`;
+            }
+
+            updateActiveNav() {
+                const sections = document.querySelectorAll('.topic-section');
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                sections.forEach((section, index) => {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 150 && rect.bottom >= 150) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        navLinks[index]?.classList.add('active');
+                    }
+                });
+            }
+
+            scrollToTopic(index) {
+                const section = document.getElementById(`topic-${index}`);
+                if (section) {
+                    section.classList.add('expanded');
+                    localStorage.setItem(`topic-${index}-expanded`, 'true');
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => this.updateActiveNav(), 100);
+                }
+            }
+
+            attachEventListeners() {
+                // Definition cards
+                document.querySelectorAll('.definition-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        card.classList.toggle('expanded');
+                    });
+                });
+
+                // Lightbox
+                document.getElementById('lightboxClose').addEventListener('click', () => {
+                    this.closeLightbox();
+                });
+                document.getElementById('lightbox').addEventListener('click', (e) => {
+                    if (e.target.id === 'lightbox') {
+                        this.closeLightbox();
+                    }
+                });
+
+                // PDF Lightbox
+                document.getElementById('pdfLightboxClose').addEventListener('click', () => {
+                    this.closePDFViewer();
+                });
+                document.getElementById('pdfLightbox').addEventListener('click', (e) => {
+                    if (e.target.id === 'pdfLightbox') {
+                        this.closePDFViewer();
+                    }
+                });
+                
+                // PDF navigation (basic - can be enhanced with PDF.js)
+                document.getElementById('pdfPrevPage').addEventListener('click', () => {
+                    const viewer = document.getElementById('pdfViewer');
+                    // Basic implementation - PDF.js would provide better control
+                });
+                
+                document.getElementById('pdfNextPage').addEventListener('click', () => {
+                    const viewer = document.getElementById('pdfViewer');
+                    // Basic implementation - PDF.js would provide better control
+                });
+
+                // Scroll tracking
+                window.addEventListener('scroll', () => {
+                    this.updateActiveNav();
+                });
+
+                // Save expanded state
+                document.querySelectorAll('.topic-header').forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        const section = header.closest('.topic-section');
+                        const isExpanded = section.classList.contains('expanded');
+                        localStorage.setItem(`topic-${index}-expanded`, isExpanded);
+                    });
+                });
+            }
+
+            darkenColor(color) {
+                // Simple color darkening
+                if (color.startsWith('#')) {
+                    const num = parseInt(color.replace('#', ''), 16);
+                    const amt = 20;
+                    const R = Math.max(0, ((num >> 16) & 0xFF) - amt);
+                    const G = Math.max(0, ((num >> 8) & 0xFF) - amt);
+                    const B = Math.max(0, (num & 0xFF) - amt);
+                    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+                }
+                return color;
+            }
+        }
+
+        // Initialize the study guide
+        const studyGuide = new StudyGuide();
+
+        // Make it globally accessible for inline handlers
+        window.studyGuide = studyGuide;
+    </script>
+</body>
+</html>
+
